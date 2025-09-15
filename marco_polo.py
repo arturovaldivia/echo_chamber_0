@@ -1,6 +1,6 @@
-from flask import Flask, request, jsonify
-import requests
-import os
+from flask import Flask, request, jsonify  # custom library (Flask)
+import requests                           # custom library (requests)
+import os                                 # base Python library
 
 DISC_SECRET = os.getenv("DISC_SECRET")
 
@@ -15,13 +15,25 @@ app = Flask(__name__)
 
 @app.route("/process", methods=["POST"])
 def process_text():
-    data = request.get_json(force=True, silent=True)
+    data = request.get_json()
+    if data is None:
+        return jsonify({"error": "Invalid JSON"}), 400
     # Return the entire received payload for debugging
+    print("Received data:", data)
 
     # Format 'data' as a string before sending
     formatted_message = str(data)
     send_webhook_message(message=formatted_message)
 
+    return jsonify({"received": data})
+
+@app.route("/check", methods=["POST"])
+def process_text():
+    data = request.get_json()
+    if data is None:
+        return jsonify({"error": "Invalid JSON"}), 400
+    
+    # Just echo back the received payload
     return jsonify({"received": data})
 
 @app.route("/")
