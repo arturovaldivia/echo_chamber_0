@@ -28,7 +28,7 @@ def process_text():
     return jsonify({"received": data})
 
 @app.route("/check", methods=["POST"])
-def process_text():
+def check_text():
     data = request.get_json()
     if data is None:
         return jsonify({"error": "Invalid JSON"}), 400
