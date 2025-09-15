@@ -29,12 +29,7 @@ def process_text():
 
 @app.route("/check", methods=["POST"])
 def check_text():
-    data = request.get_json()
-    if data is None:
-        return jsonify({"error": "Invalid JSON"}), 400
-    
-    # Just echo back the received payload
-    return jsonify({"received": data})
+    return "POST received ✅", 200
 
 @app.route("/")
 def home():
