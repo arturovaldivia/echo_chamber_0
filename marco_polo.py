@@ -2,11 +2,12 @@ from flask import Flask, request, jsonify  # custom library (Flask)
 import requests                           # custom library (requests)
 import os                                 # base Python library
 
+DISC_ACCOUNT = os.getenv("DISC_ACCOUNT")
 DISC_SECRET = os.getenv("DISC_SECRET")
 
 def send_webhook_message(url = "https://my_account.discourse.group/chat/hooks/", message = "Hello from server!"):
     payload = {"text": message}
-    response = requests.post(url+DISC_SECRET, json=payload)
+    response = requests.post(url, json=payload)
 
     print(response.status_code)
     print(response.text)
@@ -23,7 +24,8 @@ def process_text():
 
     # Format 'data' as a string before sending
     formatted_message = str(data)
-    send_webhook_message(message=formatted_message)
+    URL = "https://"+DISC_ACCOUNT+".discourse.group/chat/hooks/"+DISC_SECRET
+    send_webhook_message(url = URL, message=formatted_message)
 
     return jsonify({"received": data})
 
