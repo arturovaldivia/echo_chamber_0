@@ -1,16 +1,28 @@
 from flask import Flask, request, jsonify
+import requests
+import os
+
+DISC_SECRET = os.getenv("DISC_SECRET")
+
+def send_webhook_message(url = "https://my_account.discourse.group/chat/hooks/", message = "Hello from server!"):
+    payload = {"text": message}
+    response = requests.post(url+DISC_SECRET, json=payload)
+
+    print(response.status_code)
+    print(response.text)
 
 app = Flask(__name__)
 
 @app.route("/process", methods=["POST"])
 def process_text():
-    data = request.get_json()
-    text = data.get("text", "")
+    data = request.get_json(force=True, silent=True)
+    # Return the entire received payload for debugging
 
-    # Example "processing": make uppercase
-    processed = text.upper()
+    # Format 'data' as a string before sending
+    formatted_message = str(data)
+    send_webhook_message(message=formatted_message)
 
-    return jsonify({"original": text, "processed": processed})
+    return jsonify({"received": data})
 
 @app.route("/")
 def home():
