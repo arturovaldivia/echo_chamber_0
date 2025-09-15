@@ -24,7 +24,12 @@ def process_text():
 
     # Format 'data' as a string before sending
     formatted_message = str(data)
-    URL = "https://"+DISC_ACCOUNT+".discourse.group/chat/hooks/"+DISC_SECRET
+    
+    if not DISC_ACCOUNT or not DISC_SECRET:
+        raise RuntimeError("Missing DISC_ACCOUNT or DISC_SECRET environment variables")
+    
+    URL = f"https://{DISC_ACCOUNT}.discourse.group/chat/hooks/{DISC_SECRET}"
+    
     send_webhook_message(url = URL, message=formatted_message)
 
     return jsonify({"received": data})
